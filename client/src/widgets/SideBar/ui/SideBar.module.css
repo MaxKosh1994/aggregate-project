@@ -1,0 +1,38 @@
+.sidebarContainer {
+  position: relative;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 0;
+  height: 100vh;
+  overflow-x: hidden;
+  background-color: #333;
+  transition: width 0.3s;
+}
+
+.sidebarButton {
+  position: absolute;
+  top: 120px;
+  left: 100%;
+  z-index: 10;
+  transform: translateX(-100%);
+}
+
+.open {
+  width: 33.33vw;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+li {
+  padding: 8px 16px;
+  color: white;
+}
