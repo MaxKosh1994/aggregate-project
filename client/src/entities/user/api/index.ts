@@ -38,13 +38,18 @@ export const refreshTokensThunk = createAsyncThunk<
 
 export const signUpThunk = createAsyncThunk<
   ApiResponseSuccessType<UserWithTokenType>,
-  SignUpDataType,
+  FormData,
   { rejectValue: ApiResponseRejectType }
 >(USER_THUNKS_TYPES.SIGN_UP, async (userData, { rejectWithValue }) => {
   try {
     const { data } = await axiosInstance.post<ApiResponseSuccessType<UserWithTokenType>>(
       AUTH_API_ROUTES.SIGN_UP,
       userData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
     );
 
     setAccessToken(data.data.accessToken);

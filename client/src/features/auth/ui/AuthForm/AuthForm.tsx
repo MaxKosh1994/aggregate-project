@@ -1,6 +1,6 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, Form, Input, notification } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { Button, Form, Input, notification, Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import {
   UserValidator,
   signInThunk,
@@ -10,26 +10,49 @@ import {
 } from '@/entities/user';
 import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { ROUTES } from '@/shared/enums/routes';
 
 type Props = {
-  type: string;
+  type: 'signin' | 'signup';
+  onSuccess?: () => void;
 };
 
-export default function AuthForm({ type }: Props): React.JSX.Element {
-  const navigate = useNavigate();
+export default function AuthForm({ type, onSuccess }: Props): React.JSX.Element {
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.user.loading);
+  const [form] = Form.useForm();
+  const [file, setFile] = useState<File | null>(null);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+  const handleFieldsChange = useCallback((): void => {
+    const hasErrors = form.getFieldsError().some(({ errors }) => errors.length > 0);
+    const isFieldsTouched = form.isFieldsTouched(true);
+
+    if (type === 'signin') {
+      setIsButtonDisabled(!isFieldsTouched || hasErrors);
+    } else {
+      const passwordsMatch =
+        form.getFieldValue('password') === form.getFieldValue('confirmPassword');
+      setIsButtonDisabled(!isFieldsTouched || hasErrors || !file || !passwordsMatch);
+    }
+  }, [file, form, type]);
+
+  const onBeforeUpload = (avatar: File): boolean => {
+    const isImage = avatar.type.startsWith('image/');
+    if (!isImage) {
+      notification.error({
+        message: 'Ошибка загрузки',
+        description: 'Можно загружать только файлы изображений.',
+      });
+      return false;
+    }
+    setFile(avatar);
+    handleFieldsChange();
+    return false;
+  };
 
   const onSignInFinish = async (values: SignInDataType): Promise<void> => {
     const normalizedEmail = values.email.toLowerCase();
     try {
-      const { isValid, error: validationError } = UserValidator.validateSignIn(values);
-
-      if (!isValid && validationError?.length) {
-        throw new Error(validationError as string);
-      }
-
       const resultAction = await dispatch(
         signInThunk({
           email: normalizedEmail,
@@ -38,13 +61,10 @@ export default function AuthForm({ type }: Props): React.JSX.Element {
       );
 
       unwrapResult(resultAction);
-
-      notification.success({
-        message: 'Вход выполнен',
-        description: 'Добро пожаловать',
-      });
-
-      await navigate(`${ROUTES.HOME}`);
+      form.resetFields();
+      setFile(null);
+      setIsButtonDisabled(true);
+      onSuccess?.();
     } catch (error) {
       console.log(error);
     }
@@ -52,52 +72,64 @@ export default function AuthForm({ type }: Props): React.JSX.Element {
 
   const onSignUpFinish = async (values: SignUpDataType): Promise<void> => {
     const normalizedEmail = values.email.toLowerCase();
+    const formData = new FormData();
+    formData.append('email', normalizedEmail);
+    formData.append('password', values.password);
+    formData.append('firstName', values.firstName);
+    formData.append('lastName', values.lastName);
+
+    if (file) {
+      formData.append('image', file);
+    } else {
+      notification.error({
+        message: 'Ошибка загрузки',
+        description: 'Пожалуйста, загрузите аватар.',
+      });
+      return;
+    }
+
     try {
-      const { isValid, error: validationError } = UserValidator.validateSignUp(values);
-
-      if (!isValid && validationError?.length) {
-        throw new Error(validationError as string);
-      }
-
-      const resultAction = await dispatch(
-        signUpThunk({
-          email: normalizedEmail,
-          password: values.password,
-          firstName: values.firstName,
-          lastName: values.lastName,
-        }),
-      );
+      const resultAction = await dispatch(signUpThunk(formData));
 
       unwrapResult(resultAction);
 
       notification.success({
-        message: 'Успешная регистрация',
-        description: 'Добро пожаловать',
+        message: 'Добро пожаловать',
+        description: 'Теперь тебе доступны все возможности приложения!',
       });
 
-      await navigate(`${ROUTES.HOME}`);
+      form.resetFields();
+      setFile(null);
+      setIsButtonDisabled(true);
+      onSuccess?.();
     } catch (error) {
       console.log(error);
     }
   };
 
+  React.useEffect(() => {
+    handleFieldsChange();
+  }, [file, handleFieldsChange]);
+
   return (
     <Form
+      form={form}
       name="auth"
       layout="vertical"
       initialValues={{ remember: true }}
       onFinish={type === 'signin' ? onSignInFinish : onSignUpFinish}
-      style={{ width: '400px' }}
+      onFieldsChange={handleFieldsChange}
+      style={{ width: '100%' }}
     >
       <Form.Item
         name="email"
         required
         hasFeedback
-        tooltip="This is a required field"
+        tooltip="Это обязательное поле"
         rules={[
           { required: true, message: 'Введите email' },
           {
-            validator: (_, value) =>
+            validator: (_, value: string) =>
               UserValidator.validateEmail(value)
                 ? Promise.resolve()
                 : Promise.reject(new Error('Некорректный email')),
@@ -113,7 +145,7 @@ export default function AuthForm({ type }: Props): React.JSX.Element {
         rules={[
           { required: true, message: 'Введите ваш пароль' },
           {
-            validator: async (_, value) => {
+            validator: async (_, value: string) => {
               if (UserValidator.validatePassword(value)) {
                 return Promise.resolve();
               }
@@ -132,6 +164,25 @@ export default function AuthForm({ type }: Props): React.JSX.Element {
       {type === 'signup' && (
         <>
           <Form.Item
+            name="confirmPassword"
+            dependencies={['password']}
+            hasFeedback
+            rules={[
+              { required: true, message: 'Пожалуйста, подтвердите пароль.' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (value && value === getFieldValue('password')) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('Пароли не совпадают.'));
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="Подтвердите пароль" />
+          </Form.Item>
+
+          <Form.Item
             name="firstName"
             hasFeedback
             rules={[{ required: true, message: 'Пожалуйста, укажите ваше имя.' }]}
@@ -143,13 +194,35 @@ export default function AuthForm({ type }: Props): React.JSX.Element {
             hasFeedback
             rules={[{ required: true, message: 'Пожалуйста, укажите вашу фамилию.' }]}
           >
-            <Input placeholder="Введите Фамилию" />
+            <Input placeholder="Введите фамилию" />
+          </Form.Item>
+
+          <Form.Item
+            label="Загрузка аватара"
+            required
+            tooltip="Выберите изображение для вашего профиля"
+          >
+            <Upload
+              beforeUpload={onBeforeUpload}
+              listType="picture"
+              maxCount={1}
+              onChange={handleFieldsChange}
+              onRemove={() => setFile(null)}
+            >
+              <Button icon={<UploadOutlined />}>Нажмите для загрузки</Button>
+            </Upload>
           </Form.Item>
         </>
       )}
 
       <Form.Item>
-        <Button type="primary" htmlType="submit" loading={loading} block>
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={loading}
+          block
+          disabled={isButtonDisabled}
+        >
           {type === 'signup' ? 'Регистрация' : 'Вход'}
         </Button>
       </Form.Item>

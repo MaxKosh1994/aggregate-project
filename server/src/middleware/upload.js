@@ -74,7 +74,6 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage, // Указываем настроенное хранилище (storage).
   fileFilter, // Передаём фильтр для проверки типов файлов.
-  limits: { fileSize: 1024 * 1024 }, // Устанавливаем ограничение на размер: 1 MB.
 });
 
 // Экспортируем объект upload, чтобы его использовать как middleware в маршрутах Express.

@@ -1,8 +1,28 @@
-.container {
+.header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 10px 30px;
-  background-color: var(--primary-neutral-600);
-  border-bottom: 1px solid white;
+  justify-content: center;
+  padding: 0 20px;
+  background-color: #000000;
+  color: #fff;
+  outline: 2px solid #646cff;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.menuButton {
+  color: #fff !important;
+}
+
+.menu {
+  background-color: #000000 !important;
 }

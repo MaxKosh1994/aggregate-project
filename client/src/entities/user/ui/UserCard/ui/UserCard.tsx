@@ -9,6 +9,7 @@ type Props = {
 };
 
 export function UserCard({ user }: Props): React.JSX.Element {
+  console.log(`${import.meta.env.VITE_IMAGES}/${user.avatarSrc}`);
   return (
     <div className={styles.container}>
       <Tooltip
@@ -20,7 +21,11 @@ export function UserCard({ user }: Props): React.JSX.Element {
           />
         }
       >
-        <Avatar size={64} src={user.avatarSrc} alt={`${user.firstName}'s avatar`} />
+        <Avatar
+          size={64}
+          src={`${import.meta.env.VITE_IMAGES}/${user.avatarSrc}`}
+          alt={`${user.firstName}'s avatar`}
+        />
       </Tooltip>
     </div>
   );

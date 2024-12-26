@@ -39,7 +39,7 @@ export function DOMTreeAnalyzer(): React.JSX.Element {
 
   return (
     <div className={styles.container}>
-      <span>Total Nodes: {totalNodesState}</span>
+      <span>Всего узлов: {totalNodesState}</span>
       <ul>
         {Object.entries(tagCountsState).map(([tag, count]) => (
           <li key={tag}>

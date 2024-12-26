@@ -10,29 +10,41 @@
   width: 0;
   height: 100vh;
   overflow-x: hidden;
-  background-color: #333;
+  background-color: rgba(0, 0, 0, 0.69);
   transition: width 0.3s;
-}
-
-.sidebarButton {
-  position: absolute;
-  top: 120px;
-  left: 100%;
-  z-index: 10;
-  transform: translateX(-100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .open {
-  width: 33.33vw;
+  width: 40vw;
+  outline: 2px solid #646cff;
 }
 
-ul {
-  padding: 0;
-  margin: 0;
-  list-style-type: none;
-}
-
-li {
-  padding: 8px 16px;
+.sidebarButton {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1100;
+  width: 40px;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+  transition: left 0.3s, transform 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
   color: white;
+}
+
+sidebarButton:hover {
+  border-color: #646cff !important;
+}
+
+.openButton {
+  left: 40vw;
 }

@@ -1,10 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { ROUTES } from '@/shared/enums/routes';
 import Layout from '../Layout/Layout';
-import { AuthPage, HomePage } from '@/pages';
+import { HomePage } from '@/pages';
 import RouterErrorFallback from './RouterErrorFallback';
-import AuthGuard from './AuthGuard';
-import PublicGuard from './PublicGuard';
+// import AuthGuard from './AuthGuard';
+// import PublicGuard from './PublicGuard';
 
 export const router = createBrowserRouter([
   {
@@ -12,20 +12,8 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: ROUTES.AUTH,
-        element: (
-          <PublicGuard>
-            <AuthPage />
-          </PublicGuard>
-        ),
-      },
-      {
         path: ROUTES.HOME,
-        element: (
-          <AuthGuard>
-            <HomePage />,
-          </AuthGuard>
-        ),
+        element: <HomePage />,
         errorElement: <RouterErrorFallback />,
       },
       // {
