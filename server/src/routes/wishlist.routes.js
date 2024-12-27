@@ -5,10 +5,10 @@ const verifyAccessToken = require('../middleware/verifyAccessToken');
 
 router
   //* Метод GET - получение всех вишлистов.
-  .get('/', WishlistController.getAll)
+  .get('/', verifyAccessToken, WishlistController.getAll)
 
   //* Метод GET - получение конкретного вишлиста по ID.
-  .get('/:id', WishlistController.getById)
+  .get('/:id', verifyAccessToken, WishlistController.getById)
 
   //* Метод POST - создание нового вишлиста.
   .post(

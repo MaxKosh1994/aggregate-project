@@ -1,17 +1,19 @@
+import styles from './UserCard.module.css';
 import React from 'react';
 import { Avatar, Tooltip } from 'antd';
 import type { UserType } from '@/entities/user/model';
-import styles from './UserCard.module.css';
 import { UserTooltipContent } from '../../UserTooltipContent';
+import { useIsUserOnline } from '@/entities/user/hooks/useIsUserOnline';
 
 type Props = {
   user: UserType;
 };
 
 export function UserCard({ user }: Props): React.JSX.Element {
-  console.log(`${import.meta.env.VITE_IMAGES}/${user.avatarSrc}`);
+  const isOnline = useIsUserOnline(user.id);
+
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${isOnline ? styles.online : ''}`}>
       <Tooltip
         title={
           <UserTooltipContent

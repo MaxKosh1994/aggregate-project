@@ -2,9 +2,9 @@ import { AxiosError, type AxiosResponse } from 'axios';
 import type { ApiResponseRejectType } from '../types';
 import { defaultRejectedAxiosError } from '../consts';
 
-interface ICustomAxiosResponse extends AxiosResponse {
+type ICustomAxiosResponse = AxiosResponse & {
   data: ApiResponseRejectType;
-}
+};
 
 export function handleAxiosError(error: unknown): ApiResponseRejectType {
   if (error instanceof AxiosError) {

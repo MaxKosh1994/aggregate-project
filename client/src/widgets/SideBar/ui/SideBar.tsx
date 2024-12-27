@@ -1,6 +1,6 @@
+import styles from './Sidebar.module.css';
 import React, { useState } from 'react';
 import { ArrowRightOutlined, ArrowLeftOutlined } from '@ant-design/icons'; // Иконки
-import styles from './Sidebar.module.css';
 import { DOMTreeAnalyzer } from '@/features/DOMTreeAnalyzer';
 import { Button } from 'antd';
 

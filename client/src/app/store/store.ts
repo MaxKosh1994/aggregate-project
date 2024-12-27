@@ -1,9 +1,11 @@
-import { userReducer } from '@/entities/user';
 import { configureStore } from '@reduxjs/toolkit';
+import { userReducer } from '@/entities/user';
+import { wishlistReducer } from '@/entities/wishlist';
 
 const store = configureStore({
   reducer: {
     user: userReducer,
+    wishlist: wishlistReducer,
   },
 });
 

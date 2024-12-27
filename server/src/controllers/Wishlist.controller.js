@@ -7,10 +7,15 @@ const formatResponse = require('../utils/formatResponse');
 class WishlistController {
   //-- Метод для получения всех вишлистов
   static async getAll(req, res) {
+    //* Получаем текущего пользователя
+    // Пользователь, инициировавший запрос, извлекается из `res.locals`.
+    // Это значение добавляется после прохождения промежуточного middleware-аутентификации.
+    const { user } = res.locals;
+
     try {
       //? За запросы в БД отвечает сервис
       // Получаем список всех вишлистов с использованием сервиса
-      const wishlists = await WishlistService.getAll();
+      const wishlists = await WishlistService.getAll(user.id);
 
       //! Проверка на длину списка (обработка негативного кейса)
       // Если вишлисты не найдены (список пуст), возвращаем сообщение об этом

@@ -1,13 +1,13 @@
 import React, { type ReactNode } from 'react';
 
-interface IErrorBoundaryProps {
+type IErrorBoundaryProps = {
   children: ReactNode;
-}
+};
 
-interface IErrorBoundaryState {
+type IErrorBoundaryState = {
   hasError: boolean;
   error: Error | null;
-}
+};
 
 export class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBoundaryState> {
   constructor(props: IErrorBoundaryProps) {
@@ -23,8 +23,7 @@ export class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBo
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    console.error('Error:', error, errorInfo);
-    //? отправка ошибки для записи
+    console.error('Error:', error, errorInfo, this.state.error);
   }
 
   render(): ReactNode {

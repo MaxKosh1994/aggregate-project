@@ -14,7 +14,7 @@ export default function AuthGuard({ children }: { children: ReactNode }): React.
   }
 
   if (!user) {
-    return <Navigate to={`${ROUTES.AUTH_ROOT}/signin`} state={{ from: location }} replace />;
+    return <Navigate to={ROUTES.HOME} state={{ from: location }} replace />;
   }
   return <>{children}</>;
 }

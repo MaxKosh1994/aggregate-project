@@ -2,6 +2,7 @@
 // `WISHLIST_INCLUDES` - это список связанных таблиц для объединения с моделью Wishlist.
 // `Wishlist` - основная модель для управления вишлистами.
 // `WishlistUser` - модель для связи пользователей с вишлистами (например, для управления участниками вишлиста).
+const { Op } = require('sequelize');
 const { WISHLIST_INCLUDES } = require('../consts/modelsFields');
 const { Wishlist, WishlistUser } = require('../db/models');
 
@@ -13,10 +14,18 @@ class WishlistService {
    * Метод для получения всех созданных вишлистов.
    * @returns {Promise<Array>} - Возвращает массив всех вишлистов с их связанными данными.
    */
-  static async getAll() {
+  static async getAll(userId) {
     // Используем метод findAll для получения всех записей из таблицы Wishlist.
     // Параметр include берёт связанные данные (указанные в WISHLIST_INCLUDES).
     return await Wishlist.findAll({
+      where: {
+        [Op.or]: [
+          { ownerId: userId }, // Пользователь владелец
+          {
+            '$invitedUsers.id$': userId, // Пользователь приглашён
+          },
+        ],
+      },
       include: WISHLIST_INCLUDES.map((include) => {
         // Если загружаются связанные элементы "wishlistItems", добавляем сортировку.
         if (include.as === 'wishlistItems') {

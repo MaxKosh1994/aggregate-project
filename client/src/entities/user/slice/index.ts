@@ -1,10 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { message } from 'antd';
 import type { UserType } from '../model';
-import { refreshTokensThunk, signUpThunk, signInThunk, signOutThunk } from '../api';
+import {
+  refreshTokensThunk,
+  signUpThunk,
+  signInThunk,
+  signOutThunk,
+  getAllUsersThunk,
+} from '../api';
 
 type UserState = {
   user: UserType | null;
+  users: UserType[] | [];
   error: string | null;
   loading: boolean;
   isInitialized: boolean;
@@ -12,6 +19,7 @@ type UserState = {
 
 const initialState: UserState = {
   user: null,
+  users: [],
   error: null,
   loading: false,
   isInitialized: false,
@@ -89,6 +97,21 @@ const userSlice = createSlice({
         state.user = null;
         state.error = action.payload!.error;
         message.error(action.payload!.error);
+      })
+
+      //* getAllUsersThunk
+      .addCase(getAllUsersThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllUsersThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = action.payload.data;
+        state.error = null;
+      })
+      .addCase(getAllUsersThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.users = [];
+        state.error = action.payload!.error;
       });
   },
 });

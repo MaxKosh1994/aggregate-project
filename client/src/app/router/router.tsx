@@ -1,10 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { ROUTES } from '@/shared/enums/routes';
 import Layout from '../Layout/Layout';
-import { HomePage } from '@/pages';
+import { HomePage, StartPage } from '@/pages';
 import RouterErrorFallback from './RouterErrorFallback';
-// import AuthGuard from './AuthGuard';
-// import PublicGuard from './PublicGuard';
+import AuthGuard from './AuthGuard';
+import PublicGuard from './PublicGuard';
 
 export const router = createBrowserRouter([
   {
@@ -13,19 +13,28 @@ export const router = createBrowserRouter([
     children: [
       {
         path: ROUTES.HOME,
-        element: <HomePage />,
+        element: (
+          <PublicGuard>
+            <StartPage />
+          </PublicGuard>
+        ),
         errorElement: <RouterErrorFallback />,
       },
-      // {
-      //   path: '/test',
-      //   lazy: () =>
-      //     import('@/pages').then((module) => ({
-      //       Component: (props) => <module.TestPage {...props} />,
-      //     })),
-      // },
+      {
+        path: ROUTES.APP,
+        element: (
+          <AuthGuard>
+            <HomePage />
+          </AuthGuard>
+        ),
+        errorElement: <RouterErrorFallback />,
+      },
       {
         path: '*',
-        element: <h1>404</h1>,
+        lazy: () =>
+          import('@/pages').then((module) => ({
+            Component: (props) => <module.Page404 {...props} />,
+          })),
       },
     ],
   },

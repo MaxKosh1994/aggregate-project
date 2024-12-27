@@ -37,7 +37,7 @@ export default tseslint.config(
       'no-void': 'off',
       'no-param-reassign': 'off',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
-      '@typescript-eslint/no-non-null-assertion': 'warn',
+      '@typescript-eslint/no-non-null-assertion': 'off',
       'no-underscore-dangle': 'off',
       'spaced-comment': 'off',
       'no-unsafe-call': 'off',
@@ -48,6 +48,7 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-extraneous-class': 'off',
+      '@typescript-eslint/no-unnecessary-condition': 'off',
       '@typescript-eslint/no-misused-promises': [
         'error',
         {

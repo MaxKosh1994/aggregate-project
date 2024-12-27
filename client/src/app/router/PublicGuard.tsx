@@ -14,7 +14,7 @@ export default function PublicGuard({ children }: { children: ReactNode }): Reac
   }
 
   if (user) {
-    return <Navigate to={ROUTES.HOME} state={{ from: location }} replace />;
+    return <Navigate to={ROUTES.APP} state={{ from: location }} replace />;
   }
   return <>{children}</>;
 }

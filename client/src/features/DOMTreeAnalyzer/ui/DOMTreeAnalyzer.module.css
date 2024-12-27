@@ -5,4 +5,55 @@
   align-items: flex-start;
   justify-content: center;
   padding: 20px 10px;
+  border: 1px solid var(--border-primary-color);
+  border-radius: var(--border-radius-medium);
+}
+
+.node {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 3px;
+  margin: 5px;
+  border-bottom: 1px solid var(--border-primary-color);
+}
+
+.nodeCount {
+  color: yellow;
+}
+
+.tagDiv {
+  color: blue;
+}
+
+.tagSpan {
+  color: green;
+}
+
+.tagAnchor {
+  color: orange;
+}
+
+.tagParagraph {
+  color: purple;
+}
+
+.tagButton {
+  color: red;
+}
+
+.tagInput {
+  color: darkcyan;
+}
+
+.tagImg {
+  color: brown;
+}
+
+.tagList {
+  color: teal;
+}
+
+.tagDefault {
+  color: rgb(255 255 255);
 }

@@ -3,9 +3,9 @@ import type { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConf
 
 const DEFAULT_TIMEOUT = 10000;
 
-interface ExtendedAxiosRequestConfig extends InternalAxiosRequestConfig {
+type ExtendedAxiosRequestConfig = InternalAxiosRequestConfig & {
   sent?: boolean;
-}
+};
 
 export const axiosInstance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API,
@@ -55,9 +55,13 @@ axiosInstance.interceptors.response.use(
         }
 
         //? Повторно отправляем исходный запрос.
-        return axiosInstance(prevRequest);
+        return await axiosInstance(prevRequest);
       } catch (refreshError) {
-        return Promise.reject(refreshError);
+        if (refreshError instanceof Error) {
+          return Promise.reject(refreshError);
+        }
+
+        return Promise.reject(new Error('Unknown error occurred during token refresh.'));
       }
     }
 

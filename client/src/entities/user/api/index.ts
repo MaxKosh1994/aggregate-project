@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosInstance, setAccessToken } from '@/shared/lib/axiosInstance';
 import type { ApiResponseRejectType, ApiResponseSuccessType } from '@/shared/types';
-import type { SignInDataType, SignUpDataType, UserWithTokenType } from '../model';
+import type { SignInDataType, UserType, UserWithTokenType } from '../model';
 import { handleAxiosError } from '@/shared/utils/handleAxiosError';
 
 enum AUTH_API_ROUTES {
@@ -9,6 +9,7 @@ enum AUTH_API_ROUTES {
   SIGN_UP = '/auth/signUp',
   SIGN_IN = '/auth/signIn',
   SIGN_OUT = '/auth/signOut',
+  USERS = '/auth/users',
 }
 
 enum USER_THUNKS_TYPES {
@@ -16,6 +17,7 @@ enum USER_THUNKS_TYPES {
   SIGN_UP = 'user/signUp',
   SIGN_IN = 'user/signIn',
   SIGN_OUT = 'user/signOut',
+  GET_ALL_USERS = 'user/allUsers',
 }
 
 export const refreshTokensThunk = createAsyncThunk<
@@ -24,7 +26,6 @@ export const refreshTokensThunk = createAsyncThunk<
   { rejectValue: ApiResponseRejectType }
 >(USER_THUNKS_TYPES.REFRESH_TOKENS, async (_, { rejectWithValue }) => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { data } = await axiosInstance.get<ApiResponseSuccessType<UserWithTokenType>>(
       AUTH_API_ROUTES.REFRESH_TOKENS,
     );
@@ -88,6 +89,22 @@ export const signOutThunk = createAsyncThunk<
     );
 
     setAccessToken('');
+    return data;
+  } catch (error) {
+    return rejectWithValue(handleAxiosError(error));
+  }
+});
+
+export const getAllUsersThunk = createAsyncThunk<
+  ApiResponseSuccessType<UserType[]>,
+  undefined,
+  { rejectValue: ApiResponseRejectType }
+>(USER_THUNKS_TYPES.GET_ALL_USERS, async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axiosInstance.get<ApiResponseSuccessType<UserType[]>>(
+      AUTH_API_ROUTES.USERS,
+    );
+
     return data;
   } catch (error) {
     return rejectWithValue(handleAxiosError(error));

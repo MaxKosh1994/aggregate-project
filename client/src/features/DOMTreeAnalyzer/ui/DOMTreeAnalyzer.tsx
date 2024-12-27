@@ -1,7 +1,7 @@
-import styles from './DOMTreeAnalyzer.module.css';
-import type React from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import styles from './DOMTreeAnalyzer.module.css';
+import { getTagColorClass } from '@/shared/utils/getTagColorClass';
 
 type TagCount = Record<string, number>;
 
@@ -40,13 +40,14 @@ export function DOMTreeAnalyzer(): React.JSX.Element {
   return (
     <div className={styles.container}>
       <span>Всего узлов: {totalNodesState}</span>
-      <ul>
+      <div>
         {Object.entries(tagCountsState).map(([tag, count]) => (
-          <li key={tag}>
-            {tag}: {count}
-          </li>
+          <div key={tag} className={`${styles.node} ${styles[getTagColorClass(tag)]}`}>
+            <span>{tag}</span>
+            <span className={styles.nodeCount}>{count}</span>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
