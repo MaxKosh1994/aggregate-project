@@ -130,7 +130,7 @@ class WishlistController {
 
     try {
       // Если файл присутствует, формируем путь до сохраненного изображения (например, в директории `wishlistsBackgrounds`).
-      const backgroundPictureSrc = `wishlistsBackgrounds/${req.file.path}`;
+      const backgroundPictureSrc = `wishlistsBackgrounds/${req.file.filename}`;
 
       //? Используем сервис для выполнения операций с базой данных.
       // Создаем новый вишлист, передавая его параметры:
@@ -244,7 +244,7 @@ class WishlistController {
       let backgroundPictureSrc = wishlistToUpdate.backgroundPictureSrc;
       // Если пользователь отправляет новый файл, заменяем старое изображение
       if (req.file) {
-        backgroundPictureSrc = `wishlistsBackgrounds/${req.file.path}`; // Формируем новый путь для файла
+        backgroundPictureSrc = `wishlistsBackgrounds/${req.file.filename}`; // Формируем новый путь для файла
       }
 
       //? Запрос на обновление данных в базе через сервис

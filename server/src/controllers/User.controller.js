@@ -38,6 +38,8 @@ class UserController {
       // Извлекаем данные из ответа сервиса.
       const { data } = response;
 
+      console.log(data);
+
       // Проверяем результат верификации email, выполняя проверку наличия данных и их статуса.
       if (data.data && data.data.result === 'undeliverable') {
         // Если сервис сообщает, что email недоставляемый, возвращаем ответ со статусом 200 (успешный запрос) и false в `exists`.
@@ -57,7 +59,9 @@ class UserController {
           200, // Статус ответа.
           'Email найден', // Сообщение для клиента.
           {
-            exists: data.data.result === 'deliverable', // Если результат "deliverable", значит email существует.
+            exists:
+              data.data.result === 'deliverable' ||
+              data.data.result === 'risky', // Если результат "deliverable" или "risky", значит email существует.
           },
           'Email найден' // Техническая информация.
         )

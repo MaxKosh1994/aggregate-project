@@ -1,3 +1,4 @@
+export { setCurrentWishlist } from './slice';
 export { WishListCard } from './ui/WishListCard';
 export {
   getAllUserWishListsThunk,
@@ -8,5 +9,5 @@ export {
   inviteUserToWishListThunk,
   kickOutUserToWishListThunk,
 } from './api';
-export type { WishListType } from './model';
+export type { WishListType, CreateWishListData } from './model';
 export { wishlistReducer } from './slice';

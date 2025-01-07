@@ -28,7 +28,12 @@ const initialState: WishListState = {
 const wishlistSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setCurrentWishlist: (state, action) => {
+      state.currentWishlist =
+        state.wishlists.find((el) => el.id === action.payload) ?? state.wishlists[0];
+    },
+  },
   extraReducers: (builder) => {
     builder
       //* getAllUserWishListsThunk
@@ -36,8 +41,11 @@ const wishlistSlice = createSlice({
         state.loading = true;
       })
       .addCase(getAllUserWishListsThunk.fulfilled, (state, action) => {
+        const { data } = action.payload;
+        const [firstWishlist] = data;
         state.loading = false;
-        state.wishlists = action.payload.data;
+        state.wishlists = data;
+        state.currentWishlist = firstWishlist;
         state.error = null;
       })
       .addCase(getAllUserWishListsThunk.rejected, (state, action) => {
@@ -155,4 +163,5 @@ const wishlistSlice = createSlice({
   },
 });
 
+export const { setCurrentWishlist } = wishlistSlice.actions;
 export const wishlistReducer = wishlistSlice.reducer;

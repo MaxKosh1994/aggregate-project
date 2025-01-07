@@ -1,1 +1,2 @@
-export { WishListsGroup } from './ui/WishListsGroup';
+import { WishListsGroup } from './ui/WishListsGroup';
+export default WishListsGroup;

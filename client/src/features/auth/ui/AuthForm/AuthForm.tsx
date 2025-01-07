@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { Button, Form, Input, notification, Upload } from 'antd';
+import { Button, Form, Input, notification, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import {
   UserValidator,
   signInThunk,
   signUpThunk,
+  isEmailExistsChecker,
   type SignInDataType,
   type SignUpDataType,
 } from '@/entities/user';
@@ -77,6 +78,13 @@ export default function AuthForm({ type, onSuccess }: Props): React.JSX.Element 
     formData.append('password', values.password);
     formData.append('firstName', values.firstName);
     formData.append('lastName', values.lastName);
+
+    const isEmailExistsData = await isEmailExistsChecker(normalizedEmail);
+
+    if (!isEmailExistsData.data?.exists) {
+      message.error(isEmailExistsData.message);
+      return;
+    }
 
     if (file) {
       formData.append('image', file);

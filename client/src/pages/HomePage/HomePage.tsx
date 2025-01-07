@@ -1,10 +1,42 @@
-import React from 'react';
-import { WishListsGroup } from '@/widgets/WishListsGroup';
+import React, { Suspense } from 'react';
+import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
+import {
+  closeModalCreateWishlist,
+  closeModalUpdateWishlist,
+} from '@/shared/model/slices/modalSlice';
+import { Modal } from 'antd';
+import { CreateWishListForm } from '@/widgets/CreateWishlistForm';
+import { UpdateWishlistForm } from '@/widgets/UpdateWishlistForm';
+import { Loader } from '@/shared/ui/Loader';
+
+const WishListsGroup = React.lazy(() => import('@/widgets/WishListsGroup'));
 
 export function HomePage(): React.JSX.Element {
+  const { isModalCreateWishlistOpen, isModalUpdateWishlistOpen } = useAppSelector(
+    (state) => state.modals,
+  );
+  const dispatch = useAppDispatch();
   return (
     <>
-      <WishListsGroup />
+      <Suspense fallback={<Loader loading={true} />}>
+        <WishListsGroup />
+      </Suspense>
+      <Modal
+        title="Создать новый вишлист"
+        open={isModalCreateWishlistOpen}
+        footer={null}
+        onCancel={() => dispatch(closeModalCreateWishlist())}
+      >
+        <CreateWishListForm />
+      </Modal>
+      <Modal
+        title="Изменить вишлист"
+        open={isModalUpdateWishlistOpen}
+        footer={null}
+        onCancel={() => dispatch(closeModalUpdateWishlist())}
+      >
+        <UpdateWishlistForm />
+      </Modal>
     </>
   );
 }

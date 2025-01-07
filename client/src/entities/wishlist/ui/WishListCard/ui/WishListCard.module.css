@@ -1,9 +1,10 @@
 .container {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  gap: 10px;
   align-items: center;
-  justify-content: space-between;
-  width: 200px;
+  justify-content: center;
+  min-width: 200px;
   height: 100px;
   padding: 20px;
   cursor: pointer;
@@ -13,4 +14,9 @@
 
 .container:hover {
   box-shadow: 0 0 15px 5px var(--shadow-primary-color);
+}
+
+.buttonsContainer {
+  display: flex;
+  gap: 30px;
 }

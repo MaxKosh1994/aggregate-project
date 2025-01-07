@@ -1,3 +1,4 @@
+export { isEmailExistsChecker } from './hooks/isEmailExistsChecker';
 export { useIsUserOnline } from './hooks/useIsUserOnline';
 export { UserCard } from './ui/UserCard';
 export { userReducer } from './slice';

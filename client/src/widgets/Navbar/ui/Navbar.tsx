@@ -7,6 +7,12 @@ import { signOutThunk, UserCard } from '@/entities/user';
 import { ROUTES } from '@/shared/enums/routes';
 import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
 import AuthForm from '@/features/auth';
+import {
+  closeModalSignIn,
+  closeModalSignUp,
+  showModalSignIn,
+  showModalSignUp,
+} from '@/shared/model/slices/modalSlice';
 
 const { Header } = Layout;
 
@@ -14,8 +20,7 @@ export default function Navbar(): React.JSX.Element {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.user);
-  const [isModalSignInOpen, setIsModalSignInOpen] = useState(false);
-  const [isModalSignUpOpen, setIsModalSignUpOpen] = useState(false);
+  const { isModalSignInOpen, isModalSignUpOpen } = useAppSelector((state) => state.modals);
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -28,24 +33,6 @@ export default function Navbar(): React.JSX.Element {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  const showModalSignIn = (): void => {
-    setIsDrawerVisible(false);
-    setIsModalSignInOpen(true);
-  };
-
-  const showModalSignUp = (): void => {
-    setIsDrawerVisible(false);
-    setIsModalSignUpOpen(true);
-  };
-
-  const handleCancelSignIn = (): void => {
-    setIsModalSignInOpen(false);
-  };
-
-  const handleCancelSignUp = (): void => {
-    setIsModalSignUpOpen(false);
-  };
 
   const signOutHandler = async (): Promise<void> => {
     try {
@@ -78,10 +65,24 @@ export default function Navbar(): React.JSX.Element {
         </>
       ) : (
         <>
-          <Button type="link" onClick={showModalSignIn} className={styles.menuButton}>
+          <Button
+            type="link"
+            onClick={() => {
+              dispatch(showModalSignIn());
+              if (isMobile) setIsDrawerVisible(false);
+            }}
+            className={styles.menuButton}
+          >
             Вход
           </Button>
-          <Button type="link" onClick={showModalSignUp} className={styles.menuButton}>
+          <Button
+            type="link"
+            onClick={() => {
+              dispatch(showModalSignUp());
+              if (isMobile) setIsDrawerVisible(false);
+            }}
+            className={styles.menuButton}
+          >
             Регистрация
           </Button>
         </>
@@ -118,16 +119,33 @@ export default function Navbar(): React.JSX.Element {
       )}
       {!user && (
         <>
-          <Modal title="Вход" open={isModalSignInOpen} footer={null} onCancel={handleCancelSignIn}>
-            <AuthForm type="signin" onSuccess={handleCancelSignIn} />
+          <Modal
+            title="Вход"
+            open={isModalSignInOpen}
+            footer={null}
+            onCancel={() => dispatch(closeModalSignIn())}
+          >
+            <AuthForm
+              type="signin"
+              onSuccess={() => {
+                dispatch(closeModalSignIn());
+                if (isMobile) setIsDrawerVisible(false);
+              }}
+            />
           </Modal>
           <Modal
             title="Регистрация"
             open={isModalSignUpOpen}
             footer={null}
-            onCancel={handleCancelSignUp}
+            onCancel={() => dispatch(closeModalSignUp())}
           >
-            <AuthForm type="signup" onSuccess={handleCancelSignUp} />
+            <AuthForm
+              type="signup"
+              onSuccess={() => {
+                dispatch(closeModalSignUp());
+                if (isMobile) setIsDrawerVisible(false);
+              }}
+            />
           </Modal>
         </>
       )}

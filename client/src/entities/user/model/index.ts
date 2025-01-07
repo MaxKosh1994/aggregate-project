@@ -19,3 +19,7 @@ export type UserWithTokenType = {
   user: UserType;
   accessToken: string;
 };
+
+export type IsUserEmailExistsType = {
+  exists: boolean;
+};

@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { userReducer } from '@/entities/user';
 import { wishlistReducer } from '@/entities/wishlist';
+import modalReducer from '@/shared/model/slices/modalSlice';
 
 const store = configureStore({
   reducer: {
+    modals: modalReducer,
     user: userReducer,
     wishlist: wishlistReducer,
   },
