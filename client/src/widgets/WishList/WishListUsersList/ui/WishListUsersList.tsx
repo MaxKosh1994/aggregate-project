@@ -2,7 +2,7 @@ import styles from './WishListUsersList.module.css';
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
 import { UserItem } from '@/entities/user';
-import { kickOutUserToWishListThunk } from '@/entities/wishlist';
+import { kickOutUserToWishListThunk, setCurrentUserWishListItems } from '@/entities/wishlist';
 import {
   closeModalKickOutUserFromWishlist,
   showModalKickOutUserFromWishlist,
@@ -47,12 +47,21 @@ export function WishListUsersList(): React.JSX.Element {
         <p>Вы действительно хотите выгнать этого пользователя? Это действие необратимо.</p>
       </Modal>
 
-      <UserItem user={currentWishlist.owner} isOwner />
+      <UserItem
+        user={currentWishlist.owner}
+        isOwner
+        onClick={() => {
+          dispatch(setCurrentUserWishListItems(currentWishlist.ownerId));
+        }}
+      />
 
       {currentWishlist?.invitedUsers.map((user) => (
         <UserItem
           key={user.id}
           user={user}
+          onClick={() => {
+            dispatch(setCurrentUserWishListItems(user.id));
+          }}
           onDelete={
             currentUser && currentUser.id === currentWishlist.ownerId
               ? () => {

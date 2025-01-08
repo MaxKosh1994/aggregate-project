@@ -1,4 +1,5 @@
-export { setCurrentWishlist } from './slice';
+export { WishListItemCard } from './ui/WishListItemCard';
+export { setCurrentWishlist, setCurrentUserWishListItems } from './slice';
 export { WishListCard } from './ui/WishListCard';
 export {
   getAllUserWishListsThunk,

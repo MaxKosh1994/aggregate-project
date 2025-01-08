@@ -7,3 +7,10 @@
   color: var(--text-primary-color);
   border-right: 1px solid var(--border-primary-color);
 }
+
+@media screen and (width <= 500px) {
+  .container {
+    flex: 0.5;
+    max-width: 30%;
+  }
+}

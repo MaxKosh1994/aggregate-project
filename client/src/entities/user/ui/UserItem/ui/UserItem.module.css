@@ -24,3 +24,7 @@
 .owner {
   color: var(--shadow-success-color);
 }
+
+.name {
+  text-decoration: underline;
+}

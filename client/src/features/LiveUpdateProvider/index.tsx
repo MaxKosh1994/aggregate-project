@@ -1,4 +1,5 @@
 import type { UserType } from '@/entities/user';
+import { useAppSelector } from '@/shared/hooks/reduxHooks';
 import React, {
   useReducer,
   useEffect,
@@ -29,6 +30,7 @@ const LiveUpdateContext = createContext<LiveUpdateContextType | undefined>(undef
 
 export const LiveUpdateProvider = ({ children }: { children: ReactNode }): React.JSX.Element => {
   const [state, dispatch] = useReducer(usersReducer, { users: [] });
+  const { user } = useAppSelector((stateRedux) => stateRedux.user);
   const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
@@ -68,7 +70,7 @@ export const LiveUpdateProvider = ({ children }: { children: ReactNode }): React
     return () => {
       socket.close();
     };
-  }, []);
+  }, [user]);
 
   return (
     <LiveUpdateContext.Provider value={{ users: state.users }}>

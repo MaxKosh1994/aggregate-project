@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { message } from 'antd';
-import type { WishListType } from '../model';
+import type { WishlistItemType, WishListType } from '../model';
 import {
   getAllUserWishListsThunk,
   getUserWishListByIdThunk,
@@ -14,6 +14,7 @@ import {
 type WishListState = {
   wishlists: WishListType[] | [];
   currentWishlist: WishListType | null;
+  currentUserWishListItems: WishlistItemType[] | [];
   error: string | null;
   loading: boolean;
 };
@@ -21,6 +22,7 @@ type WishListState = {
 const initialState: WishListState = {
   wishlists: [],
   currentWishlist: null,
+  currentUserWishListItems: [],
   error: null,
   loading: false,
 };
@@ -32,6 +34,18 @@ const wishlistSlice = createSlice({
     setCurrentWishlist: (state, action) => {
       state.currentWishlist =
         state.wishlists.find((el) => el.id === action.payload) ?? state.wishlists[0];
+
+      state.currentUserWishListItems =
+        state.currentWishlist?.wishlistItems.filter(
+          (wishlistItem) => wishlistItem.authorId === action.payload,
+        ) ?? [];
+    },
+
+    setCurrentUserWishListItems: (state, action) => {
+      state.currentUserWishListItems =
+        state.currentWishlist?.wishlistItems.filter(
+          (wishlistItem) => wishlistItem.authorId === action.payload,
+        ) ?? [];
     },
   },
   extraReducers: (builder) => {
@@ -46,6 +60,10 @@ const wishlistSlice = createSlice({
         state.loading = false;
         state.wishlists = data;
         state.currentWishlist = firstWishlist;
+        state.currentUserWishListItems =
+          firstWishlist?.wishlistItems.filter(
+            (wishlistItem) => wishlistItem.authorId === firstWishlist.ownerId,
+          ) ?? [];
         state.error = null;
       })
       .addCase(getAllUserWishListsThunk.rejected, (state, action) => {
@@ -78,6 +96,10 @@ const wishlistSlice = createSlice({
         state.loading = false;
         state.wishlists = [...state.wishlists, action.payload.data];
         state.currentWishlist = action.payload.data;
+        state.currentUserWishListItems =
+          action.payload.data?.wishlistItems.filter(
+            (wishlistItem) => wishlistItem.authorId === action.payload.data.ownerId,
+          ) ?? [];
         message.success(action.payload.message);
         state.error = null;
       })
@@ -135,6 +157,13 @@ const wishlistSlice = createSlice({
           el.id === action.payload.data.id ? action.payload.data : el,
         );
         state.currentWishlist = action.payload.data;
+        if (
+          !action.payload.data.invitedUsers
+            .map((el) => el.id)
+            .includes(state.currentUserWishListItems[0].authorId)
+        ) {
+          state.currentUserWishListItems = [];
+        }
         message.success(action.payload.message);
         state.error = null;
       })
@@ -153,6 +182,7 @@ const wishlistSlice = createSlice({
         state.wishlists = state.wishlists.filter((el) => el.id !== action.payload.data.id);
         message.success(action.payload.message);
         state.currentWishlist = null;
+        state.currentUserWishListItems = [];
         state.error = null;
       })
       .addCase(deleteWishListByIdThunk.rejected, (state, action) => {
@@ -163,5 +193,5 @@ const wishlistSlice = createSlice({
   },
 });
 
-export const { setCurrentWishlist } = wishlistSlice.actions;
+export const { setCurrentWishlist, setCurrentUserWishListItems } = wishlistSlice.actions;
 export const wishlistReducer = wishlistSlice.reducer;
