@@ -5,12 +5,14 @@ import { WishListItemCard } from '@/entities/wishlist';
 
 export function WishListItemsList(): React.JSX.Element {
   const { currentUserWishListItems } = useAppSelector((state) => state.wishlist);
-  console.log(currentUserWishListItems);
+
   return (
     <section className={styles.container}>
-      {currentUserWishListItems.map((el) => (
-        <WishListItemCard key={el.id} wishListItem={el} />
-      ))}
+      {currentUserWishListItems.length ? (
+        currentUserWishListItems.map((el) => <WishListItemCard key={el.id} wishListItem={el} />)
+      ) : (
+        <h2>У этого пользователя пока нет желаний, он ничего не хочет</h2>
+      )}
     </section>
   );
 }

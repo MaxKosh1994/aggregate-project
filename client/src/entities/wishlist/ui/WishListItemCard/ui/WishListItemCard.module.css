@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 200px;
+  width: 100%;
+  padding: 15px;
+  cursor: pointer;
+  border: 1px solid var(--border-primary-color);
+  border-radius: var(--border-radius-large);
+}
+
+.point {
+  display: flex;
+  justify-content: space-between;
+}
+
+.container:hover {
+  box-shadow: 0 0 15px 5px var(--shadow-primary-color);
+}

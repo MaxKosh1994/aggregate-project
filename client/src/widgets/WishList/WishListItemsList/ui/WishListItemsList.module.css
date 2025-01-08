@@ -1,4 +1,9 @@
 .container {
   display: flex;
   flex: 2.5;
+  padding: 10px 20px;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 20px;
 }
