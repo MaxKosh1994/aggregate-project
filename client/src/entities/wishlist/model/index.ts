@@ -11,6 +11,13 @@ export type ImageType = {
 
 export type LinkType = ImageType;
 
+export enum Priority {
+  LOW = 'не особо нужно',
+  MEDIUM = 'было бы славно',
+  HIGH = 'очень нужно',
+  CRITICAL = 'душу продать',
+}
+
 export type WishlistItemType = {
   id: number;
   title: string;
@@ -19,7 +26,7 @@ export type WishlistItemType = {
   minPrice: number;
   authorId: number;
   wishlistId: number;
-  priority: 'не особо нужно' | 'было бы славно' | 'очень нужно' | 'душу продать';
+  priority: Priority;
   createdAt: Date;
   updatedAt: Date;
   owner: UserType;
