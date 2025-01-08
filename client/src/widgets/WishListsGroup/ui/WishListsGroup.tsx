@@ -76,6 +76,7 @@ export function WishListsGroup(): React.JSX.Element {
                 : undefined
             }
             onUpdate={el.isOwned ? () => handleUpdateWishList(el.id) : undefined}
+            onClick={() => dispatch(setCurrentWishlist(el.id))}
           />
         ))
       ) : (

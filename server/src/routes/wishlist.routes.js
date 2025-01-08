@@ -31,14 +31,14 @@ router
 
   //* Метод POST - приглашение другого пользователя в вишлист по ID.
   .post(
-    '/invite:id',
+    '/invite/:id',
     verifyAccessToken,
     WishlistController.inviteUserToWishlist
   )
 
   //* Метод POST - исключение пользователя из общего вишлиста.
   .post(
-    '/kick-out:id',
+    '/kick-out/:id',
     verifyAccessToken,
     WishlistController.kickOutUserFromWishlist
   );

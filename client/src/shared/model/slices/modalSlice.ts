@@ -6,6 +6,8 @@ type ModalsState = {
   isModalCreateWishlistOpen: boolean;
   isModalUpdateWishlistOpen: boolean;
   isModalDeleteWishlistOpen: boolean;
+  isModalKickOutUserFromWishlistOpen: boolean;
+  isModalInviteUserToWishlistOpen: boolean;
 };
 
 const initialState: ModalsState = {
@@ -14,6 +16,8 @@ const initialState: ModalsState = {
   isModalCreateWishlistOpen: false,
   isModalUpdateWishlistOpen: false,
   isModalDeleteWishlistOpen: false,
+  isModalKickOutUserFromWishlistOpen: false,
+  isModalInviteUserToWishlistOpen: false,
 };
 
 const modalSlice = createSlice({
@@ -59,6 +63,22 @@ const modalSlice = createSlice({
     closeModalDeleteWishlist: (state) => {
       state.isModalDeleteWishlistOpen = false;
     },
+
+    showModalKickOutUserFromWishlist: (state) => {
+      state.isModalKickOutUserFromWishlistOpen = true;
+    },
+
+    closeModalKickOutUserFromWishlist: (state) => {
+      state.isModalKickOutUserFromWishlistOpen = false;
+    },
+
+    showModalInviteUserToWishlist: (state) => {
+      state.isModalInviteUserToWishlistOpen = true;
+    },
+
+    closeModalInviteUserToWishlist: (state) => {
+      state.isModalInviteUserToWishlistOpen = false;
+    },
   },
 });
 
@@ -73,5 +93,9 @@ export const {
   closeModalUpdateWishlist,
   showModalDeleteWishlist,
   closeModalDeleteWishlist,
+  showModalKickOutUserFromWishlist,
+  closeModalKickOutUserFromWishlist,
+  showModalInviteUserToWishlist,
+  closeModalInviteUserToWishlist,
 } = modalSlice.actions;
 export default modalSlice.reducer;

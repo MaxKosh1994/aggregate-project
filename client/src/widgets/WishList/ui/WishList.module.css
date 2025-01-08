@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border-primary-color);
+  border-radius: var(--border-radius-medium);
+}
+
+.title {
+  margin-bottom: 20px;
+  font-size: 20px;
+}

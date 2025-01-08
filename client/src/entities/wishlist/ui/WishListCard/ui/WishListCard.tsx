@@ -9,9 +9,16 @@ type Props = {
   isOwned: boolean;
   onDelete?: () => void;
   onUpdate?: () => void;
+  onClick: () => void;
 };
 
-export function WishListCard({ wishlist, isOwned, onDelete, onUpdate }: Props): React.JSX.Element {
+export function WishListCard({
+  wishlist,
+  isOwned,
+  onDelete,
+  onUpdate,
+  onClick,
+}: Props): React.JSX.Element {
   return (
     <div
       className={styles.container}
@@ -23,7 +30,9 @@ export function WishListCard({ wishlist, isOwned, onDelete, onUpdate }: Props): 
       }}
     >
       <div className={styles.content}>
-        <h3>{wishlist.title}</h3>
+        <h3 className={styles.title} onClick={onClick}>
+          {wishlist.title}
+        </h3>
       </div>
       {isOwned && (
         <div className={styles.buttonsContainer}>

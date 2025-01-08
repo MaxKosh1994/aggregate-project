@@ -3,6 +3,8 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  border-radius: 50%;
+  outline: 3px solid var(--primary-neutral-250);
 }
 
 .avatarContainer {
@@ -11,6 +13,6 @@
 
 .online {
   padding: 2px;
-  border: 3px solid #32cd32;
   border-radius: 50%;
+  outline: 3px solid var(--shadow-success-color);
 }

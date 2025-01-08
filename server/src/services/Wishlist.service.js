@@ -17,15 +17,9 @@ class WishlistService {
   static async getAll(userId) {
     // Используем метод findAll для получения всех записей из таблицы Wishlist.
     // Параметр include берёт связанные данные (указанные в WISHLIST_INCLUDES).
-    return await Wishlist.findAll({
-      where: {
-        [Op.or]: [
-          { ownerId: userId }, // Пользователь владелец
-          {
-            '$invitedUsers.id$': userId, // Пользователь приглашён
-          },
-        ],
-      },
+    const ownedWishlists = await Wishlist.findAll({
+      where: { ownerId: userId }, // Пользователь является владельцем
+
       include: WISHLIST_INCLUDES.map((include) => {
         // Если загружаются связанные элементы "wishlistItems", добавляем сортировку.
         if (include.as === 'wishlistItems') {
@@ -38,6 +32,29 @@ class WishlistService {
         return include; // Возвращаем остальные связи без изменений.
       }),
     });
+
+    const invitedWishlists = await Wishlist.findAll({
+      include: WISHLIST_INCLUDES.map((include) => {
+        // Если загружаются связанные элементы "wishlistItems", добавляем сортировку.
+        if (include.as === 'wishlistItems') {
+          return {
+            ...include,
+            separate: true, // Используем раздельную загрузку, чтобы корректно применить сортировку.
+            order: [['maxPrice', 'DESC']], // Сортируем элементы вишлиста по убыванию максимальной цены.
+          };
+        }
+        return include; // Возвращаем остальные связи без изменений.
+      }),
+    });
+
+    return [
+      ...ownedWishlists,
+      ...invitedWishlists.filter((invitedWishlist) =>
+        invitedWishlist.invitedUsers.some(
+          (invitedUser) => invitedUser.id === userId
+        )
+      ),
+    ];
   }
 
   //* Найти вишлист по ID
@@ -129,7 +146,7 @@ class WishlistService {
    */
   static async inviteUser(data) {
     // Создаём новую запись в таблице WishlistUser, чтобы связать пользователя с вишлистом.
-    const newInviteEntry = WishlistUser.create(data);
+    const newInviteEntry = await WishlistUser.create(data);
 
     if (newInviteEntry) {
       // Если запись создана успешно, возвращаем обновлённый объект вишлиста.
@@ -145,7 +162,7 @@ class WishlistService {
    */
   static async kickOutUser(data) {
     // Удаляем запись в таблице WishlistUser, которая связывает пользователя и вишлист.
-    const deletedInviteEntry = WishlistUser.destroy({ where: data });
+    const deletedInviteEntry = await WishlistUser.destroy({ where: data });
 
     if (deletedInviteEntry) {
       // Если удаление прошло успешно, возвращаем обновлённый объект вишлиста.

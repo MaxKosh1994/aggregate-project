@@ -112,7 +112,7 @@ export const inviteUserToWishListThunk = createAsyncThunk<
   try {
     const { data } = await axiosInstance.post<ApiResponseSuccessType<WishListType>>(
       `/wishlists/invite/${id}`,
-      userId,
+      { userId },
     );
 
     return data;
@@ -129,7 +129,7 @@ export const kickOutUserToWishListThunk = createAsyncThunk<
   try {
     const { data } = await axiosInstance.post<ApiResponseSuccessType<WishListType>>(
       `/wishlists/kick-out/${id}`,
-      userId,
+      { userId },
     );
 
     return data;
