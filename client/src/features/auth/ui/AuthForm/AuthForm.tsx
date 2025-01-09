@@ -134,6 +134,7 @@ export default function AuthForm({ type, onSuccess }: Props): React.JSX.Element 
         required
         hasFeedback
         tooltip="Это обязательное поле"
+        validateDebounce={1000}
         rules={[
           { required: true, message: 'Введите email' },
           {
@@ -150,6 +151,7 @@ export default function AuthForm({ type, onSuccess }: Props): React.JSX.Element 
       <Form.Item
         name="password"
         hasFeedback
+        validateDebounce={1000}
         rules={[
           { required: true, message: 'Введите ваш пароль' },
           {

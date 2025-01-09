@@ -28,8 +28,8 @@ class WishlistItemController {
     const { isValid, error } = WishlistItemValidator.validate({
       title,
       description,
-      maxPrice,
-      minPrice,
+      maxPrice: Number(maxPrice),
+      minPrice: Number(minPrice),
       links,
       priority,
     });
@@ -46,10 +46,10 @@ class WishlistItemController {
       const newWishlistItem = await WishlistItemService.create({
         title,
         description,
-        maxPrice,
-        minPrice,
+        maxPrice: Number(maxPrice),
+        minPrice: Number(minPrice),
         links,
-        wishlistId,
+        wishlistId: Number(wishlistId),
         authorId: user.id, // указание автора (текущего пользователя)
         priority,
       });
@@ -78,7 +78,7 @@ class WishlistItemController {
 
       // Форматирование пути сохранения файлов
       const images = files.map((file) => ({
-        src: path.join('wishlistItem', file.path), // путь к файлам
+        src: path.join('wishlistItem', file.filename), // путь к файлам
         wishlistItemId: newWishlistItem.id, // связь с элементом
       }));
 

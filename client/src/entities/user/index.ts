@@ -1,3 +1,5 @@
+export { setCurrentSelectedUserOnWishlist } from '../wishlist/slice';
+
 export { UserItem } from './ui/UserItem';
 export { isEmailExistsChecker } from './hooks/isEmailExistsChecker';
 export { useIsUserOnline } from './hooks/useIsUserOnline';

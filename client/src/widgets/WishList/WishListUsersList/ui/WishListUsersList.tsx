@@ -1,7 +1,7 @@
 import styles from './WishListUsersList.module.css';
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
-import { UserItem } from '@/entities/user';
+import { setCurrentSelectedUserOnWishlist, UserItem } from '@/entities/user';
 import { kickOutUserToWishListThunk, setCurrentUserWishListItems } from '@/entities/wishlist';
 import {
   closeModalKickOutUserFromWishlist,
@@ -52,6 +52,7 @@ export function WishListUsersList(): React.JSX.Element {
         isOwner
         onClick={() => {
           dispatch(setCurrentUserWishListItems(currentWishlist.ownerId));
+          dispatch(setCurrentSelectedUserOnWishlist(currentWishlist.owner.id));
         }}
       />
 
@@ -61,6 +62,7 @@ export function WishListUsersList(): React.JSX.Element {
           user={user}
           onClick={() => {
             dispatch(setCurrentUserWishListItems(user.id));
+            dispatch(setCurrentSelectedUserOnWishlist(user.id));
           }}
           onDelete={
             currentUser && currentUser.id === currentWishlist.ownerId

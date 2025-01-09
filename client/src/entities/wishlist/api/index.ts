@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosInstance } from '@/shared/lib/axiosInstance';
 import type { ApiResponseRejectType, ApiResponseSuccessType } from '@/shared/types';
 import { handleAxiosError } from '@/shared/utils/handleAxiosError';
-import type { WishListType } from '../model';
+import type { WishlistItemType, WishListType } from '../model';
 
 enum WISHLIST_THUNKS_TYPES {
   GET_ALL = 'wishlist/getAll',
@@ -12,6 +12,7 @@ enum WISHLIST_THUNKS_TYPES {
   DELETE = 'wishlist/delete',
   INVITE_USER = 'wishlist/invite',
   KICK_OUT = 'wishlist/kick-out',
+  CREATE_WISHLIST_ITEM = 'wishlist/create-wishlist-item',
 }
 
 export const getAllUserWishListsThunk = createAsyncThunk<
@@ -130,6 +131,28 @@ export const kickOutUserToWishListThunk = createAsyncThunk<
     const { data } = await axiosInstance.post<ApiResponseSuccessType<WishListType>>(
       `/wishlists/kick-out/${id}`,
       { userId },
+    );
+
+    return data;
+  } catch (error) {
+    return rejectWithValue(handleAxiosError(error));
+  }
+});
+
+export const createWishListItemThunk = createAsyncThunk<
+  ApiResponseSuccessType<WishlistItemType>,
+  FormData,
+  { rejectValue: ApiResponseRejectType }
+>(WISHLIST_THUNKS_TYPES.CREATE_WISHLIST_ITEM, async (newWishlistItemData, { rejectWithValue }) => {
+  try {
+    const { data } = await axiosInstance.post<ApiResponseSuccessType<WishlistItemType>>(
+      `/wishlistItem`,
+      newWishlistItemData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
     );
 
     return data;

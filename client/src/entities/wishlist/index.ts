@@ -1,3 +1,5 @@
+export { Priority } from './model';
+
 export { WishListItemCard } from './ui/WishListItemCard';
 export { setCurrentWishlist, setCurrentUserWishListItems } from './slice';
 export { WishListCard } from './ui/WishListCard';
@@ -9,6 +11,8 @@ export {
   deleteWishListByIdThunk,
   inviteUserToWishListThunk,
   kickOutUserToWishListThunk,
+  createWishListItemThunk,
 } from './api';
-export type { WishListType, CreateWishListData } from './model';
+export type { WishListType, CreateWishListData, WishlistItemRawDataType } from './model';
+
 export { wishlistReducer } from './slice';

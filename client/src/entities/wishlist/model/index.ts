@@ -18,6 +18,15 @@ export enum Priority {
   CRITICAL = 'душу продать',
 }
 
+export type WishlistItemRawDataType = {
+  title: string;
+  description: string;
+  maxPrice: number;
+  minPrice: number;
+  priority: Priority;
+  links: string[];
+};
+
 export type WishlistItemType = {
   id: number;
   title: string;

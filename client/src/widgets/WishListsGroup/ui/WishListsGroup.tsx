@@ -15,6 +15,7 @@ import {
 } from '@/shared/model/slices/modalSlice';
 import { Modal } from 'antd';
 import { PlaceholderCard } from './PlaceholderCard';
+import { setCurrentSelectedUserOnWishlist } from '@/entities/user';
 
 export function WishListsGroup(): React.JSX.Element {
   const dispatch = useAppDispatch();
@@ -76,7 +77,10 @@ export function WishListsGroup(): React.JSX.Element {
                 : undefined
             }
             onUpdate={el.isOwned ? () => handleUpdateWishList(el.id) : undefined}
-            onClick={() => dispatch(setCurrentWishlist(el.id))}
+            onClick={() => {
+              dispatch(setCurrentWishlist(el.id));
+              dispatch(setCurrentSelectedUserOnWishlist(el.ownerId));
+            }}
           />
         ))
       ) : (
