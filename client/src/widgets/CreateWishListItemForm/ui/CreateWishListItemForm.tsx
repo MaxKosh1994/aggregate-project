@@ -7,11 +7,13 @@ import { closeModalCreateWishListItem } from '@/shared/model/slices/modalSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
 import type { UploadFile } from 'antd/es/upload/interface';
 import { UploadOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { TextEditor } from '@/shared/ui/TextEditor';
 
 export function CreateWishListItemForm(): React.JSX.Element {
   const dispatch = useAppDispatch();
   const { loading, currentWishlist } = useAppSelector((state) => state.wishlist);
   const [fileError, setFileError] = useState(false);
+  const [description, setDescription] = useState<string>('');
 
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -44,7 +46,7 @@ export function CreateWishListItemForm(): React.JSX.Element {
 
     const formData = new FormData();
     formData.append('title', values.title);
-    formData.append('description', values.description);
+    formData.append('description', description);
     formData.append('priority', values.priority);
     formData.append('minPrice', values.minPrice.toString());
     formData.append('maxPrice', values.maxPrice.toString());
@@ -60,6 +62,7 @@ export function CreateWishListItemForm(): React.JSX.Element {
 
       form.resetFields();
       setFileList([]);
+      setDescription('');
       dispatch(closeModalCreateWishListItem());
     } catch (error) {
       console.log(error);
@@ -88,7 +91,7 @@ export function CreateWishListItemForm(): React.JSX.Element {
         label="Описание"
         rules={[{ required: true, message: 'Пожалуйста, укажите описание желания.' }]}
       >
-        <Input placeholder="Введите описание желания" />
+        <TextEditor onChange={(value) => setDescription(value)} />
       </Form.Item>
 
       <Form.Item

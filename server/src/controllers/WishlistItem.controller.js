@@ -20,6 +20,8 @@ class WishlistItemController {
       priority, // приоритет элемента
     } = req.body;
 
+    console.log('description++++++++++++=', description);
+
     //* Получение пользователя из res.locals
     // res.locals содержит данные, добавленные промежуточными обработчиками
     const { user } = res.locals;

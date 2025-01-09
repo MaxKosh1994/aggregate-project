@@ -11,6 +11,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+*,
+html,
+body {
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;

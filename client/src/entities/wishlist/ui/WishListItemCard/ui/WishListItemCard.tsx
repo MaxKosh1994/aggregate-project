@@ -51,7 +51,11 @@ export function WishListItemCard({ wishListItem }: Props): React.JSX.Element {
 
         <div className={styles.point}>
           <span>Описание:</span>
-          <span>{description}</span>
+          <span
+            dangerouslySetInnerHTML={{
+              __html: description,
+            }}
+          />
         </div>
 
         <div className={styles.point}>
