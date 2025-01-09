@@ -14,13 +14,13 @@ router
 
   //* Метод PUT - обновление существующего элемента вишлиста.
   .put(
-    '/',
+    '/:id',
     verifyAccessToken,
     upload.array('images', 10),
     WishlistItemController.update
   )
 
   //* Метод DELETE - удаление элемента из вишлиста.
-  .delete('/', verifyAccessToken, WishlistItemController.delete);
+  .delete('/:id', verifyAccessToken, WishlistItemController.delete);
 
 module.exports = router;

@@ -10,6 +10,7 @@ import {
   inviteUserToWishListThunk,
   kickOutUserToWishListThunk,
   createWishListItemThunk,
+  deleteWishListItemByIdThunk,
 } from '../api';
 
 type WishListState = {
@@ -235,6 +236,44 @@ const wishlistSlice = createSlice({
         }
       })
       .addCase(createWishListItemThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload!.error;
+        message.error(action.payload!.error);
+      })
+
+      //* deleteWishListItemByIdThunk
+      .addCase(deleteWishListItemByIdThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteWishListItemByIdThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        message.success(action.payload.message);
+
+        state.wishlists = state.wishlists.map((el) => {
+          if (el.id === action.payload.data.wishlistId) {
+            el.wishlistItems = el.wishlistItems.filter(
+              (elem) => elem.id !== action.payload.data.id,
+            );
+          }
+          return el;
+        });
+
+        if (state.currentWishlist?.id === action.payload.data.wishlistId) {
+          state.currentWishlist.wishlistItems = state.currentWishlist?.wishlistItems.filter(
+            (elem) => elem.id !== action.payload.data.id,
+          );
+        }
+
+        if (state.selectedUserInWishlistId === action.payload.data.authorId) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          state.currentUserWishListItems = state.currentUserWishListItems.filter(
+            (elem) => elem.id !== action.payload.data.id,
+          );
+        }
+      })
+      .addCase(deleteWishListItemByIdThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload!.error;
         message.error(action.payload!.error);

@@ -12,6 +12,7 @@ export {
   inviteUserToWishListThunk,
   kickOutUserToWishListThunk,
   createWishListItemThunk,
+  deleteWishListItemByIdThunk,
 } from './api';
 export type { WishListType, CreateWishListData, WishlistItemRawDataType } from './model';
 

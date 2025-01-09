@@ -13,6 +13,7 @@ enum WISHLIST_THUNKS_TYPES {
   INVITE_USER = 'wishlist/invite',
   KICK_OUT = 'wishlist/kick-out',
   CREATE_WISHLIST_ITEM = 'wishlist/create-wishlist-item',
+  DELETE_ITEM = 'wishlist/delete-wishlist-item',
 }
 
 export const getAllUserWishListsThunk = createAsyncThunk<
@@ -153,6 +154,22 @@ export const createWishListItemThunk = createAsyncThunk<
           'Content-Type': 'multipart/form-data',
         },
       },
+    );
+
+    return data;
+  } catch (error) {
+    return rejectWithValue(handleAxiosError(error));
+  }
+});
+
+export const deleteWishListItemByIdThunk = createAsyncThunk<
+  ApiResponseSuccessType<WishlistItemType>,
+  number,
+  { rejectValue: ApiResponseRejectType }
+>(WISHLIST_THUNKS_TYPES.DELETE_ITEM, async (id, { rejectWithValue }) => {
+  try {
+    const { data } = await axiosInstance.delete<ApiResponseSuccessType<WishlistItemType>>(
+      `/wishlistItem/${id}`,
     );
 
     return data;
